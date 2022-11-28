@@ -20,11 +20,6 @@ body {
 }
 
 
-.goutte {
-    width: 50px;
-    height: 50px;
-}
-
 .tapis {
     display: flex;
     justify-content: center;
@@ -32,7 +27,31 @@ body {
 }
 
 .cellule {
+    position: relative;
     width: 50px;
     height: 50px;
     border: 1px solid #000;
+}
+.active {
+    animation: moveRight 2s;
+}
+
+@keyframes moveRight {
+    0%, 100% {
+        transform: translateX(0px);
+    }
+    50% {
+        transform: translateX(500px);
+    }
+}
+
+.goutte {
+    /* position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateX(-50%, 50%); */
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: red;
 }
