@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import Boite from '../components/Boite';
 
 function App() {
-    
-
     const couleurGoutte = useRef('')
     const x = useRef(0)
     const y = useRef(0)
@@ -18,15 +16,16 @@ function App() {
 
     const ajouterGoutte = () => {
         const cellules = document.querySelectorAll('.cellule')
-
+        
         const cellulesNonUsed = []
         cellules.forEach((cellule, key) => {
             if (cellule.style.backgroundColor === '') {
                 cellulesNonUsed.push(key)
             }
         });
-
+        
         const randomSpawn = cellulesNonUsed[Math.floor(Math.random() * cellulesNonUsed.length)]
+        cellules[randomSpawn].classList.add('testing')
         cellules[randomSpawn].style.backgroundColor = couleurGoutte.current.value
     }
 
@@ -53,22 +52,26 @@ function App() {
     }
 
     const auto = () => {
+        const cellules = document.querySelectorAll('.cellule')
+        const path = ["haut", "droite", "bas", "gauche"]
 
+        cellules.forEach((cellule, key) => {
+            let j = key
+            
+            if (getComputedStyle(cellule).background !== 'none') {
+                setInterval(() => {
+                    let randomPath = path[Math.floor(Math.random() * path.length)]
+                    switch (randomPath) {
+                        case "haut": j--; break;
+                        case "droite": j += 10; break;
+                        case "bas": j++; break;
+                        case "gauche": j -= 10; break;
+                    }
+                    cellules[j].style.backgroundColor = getComputedStyle(cellule).backgroundColor
+                }, 1000)
+            }
+        });
     }
-
-    useEffect(() => {
-        const gameHeight = 4;
-        const gameWidth = 3;
-        const container = document.getElementById("grid-container");
-
-        for (let i = 0; i < gameWidth * gameHeight; i++) {
-            container.innerHTML += `<div class="grid-square"></div>`;
-        }
-
-        const gridSquares = document.querySelectorAll(".grid-square");
-
-        gridSquares[0].classList.add("contains-player");
-    }, [])
 
     return (
         <>
@@ -108,7 +111,9 @@ function App() {
 
             <div className="split right">
                 <div className="tapis">
-                    <div id="grid-container"></div>
+                    {[...Array(10)].map((x, i) =>
+                        <Cellule key={i} />
+                    )}
                 </div>
             </div>
         </>

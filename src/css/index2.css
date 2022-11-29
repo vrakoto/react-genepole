@@ -1,10 +1,6 @@
 :root {
     --high: rgba(255, 255, 255, 1);
     --less: rgba(255, 255, 255, .6);
-	--game-size: 10;
-	--game-scale: 60px;
-
-	--game-actual-size: calc(var(--game-size) * var(--game-scale));
 }
 
 body {
@@ -13,10 +9,6 @@ body {
     box-sizing: border-box;
     background-color: #363636;
     color: var(--high);
-}
-
-.actual {
-    background-color: red !important;
 }
 
 .boite {
@@ -84,23 +76,4 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-}
-
-#grid-container {
-	width: var(--game-actual-size);
-	height: var(--game-actual-size);
-
-	clear: both;
-}
-
-#grid-container .grid-square {
-	border: 1px solid #000;
-	width: var(--game-scale);
-	height: var(--game-scale);
-	float: left;
-	background-color: grey;
-}
-
-.grid-square.contains-player {
-	background-color: red !important;
 }
