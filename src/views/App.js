@@ -1,25 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import Boite from '../components/Boite';
+import Cellule from '../components/Cellule';
+import Goutte from '../components/Goutte';
 
 function App() {
-    
-
-    const couleurGoutte = useRef('')
     const x = useRef(0)
     const y = useRef(0)
+    const [selectedColor, setSelectedColor] = useState('')
 
-    const Cellule = () => {
-        const rows = [];
-        for (let i = 0; i < 10; i++) {
-            rows.push(<div key={i} className="cellule" />);
-        }
-        return <div className="colonne">{rows}</div>;
-    }
-
+    // on s'en branle de ca on verra plus tard
     const ajouterGoutte = () => {
         const cellules = document.querySelectorAll('.cellule')
 
-        const cellulesNonUsed = []
+        /* const cellulesNonUsed = []
         cellules.forEach((cellule, key) => {
             if (cellule.style.backgroundColor === '') {
                 cellulesNonUsed.push(key)
@@ -27,88 +19,93 @@ function App() {
         });
 
         const randomSpawn = cellulesNonUsed[Math.floor(Math.random() * cellulesNonUsed.length)]
-        cellules[randomSpawn].style.backgroundColor = couleurGoutte.current.value
+        cellules[randomSpawn].classList.add('testing')
+        cellules[randomSpawn].style.backgroundColor = couleurGoutte.current.value */
     }
 
+    // Pareil on s'en branle
     const decaler = () => {
-        reset()
         const colonnes = document.querySelectorAll('.colonne')
+        const lesGouttesEtablis = document.querySelectorAll('.cellule .item')[0]
 
-        const positionX = (x.current.value - 1)
+        /* const positionX = (x.current.value - 1)
         const positionY = (y.current.value - 1)
 
         try {
             colonnes[positionX].children[positionY].style.backgroundColor = couleurGoutte.current.value
         } catch (error) {
             alert("Cette cardinalité n'existe pas")
-        }
+        } */
+    }
+
+    // Pareil osef pour le moment
+    const auto = () => {
+        const cellules = document.querySelectorAll('.cellule')
+        /* const path = ["haut", "droite", "bas", "gauche"]
+
+        cellules.forEach((cellule, key) => {
+            let j = key
+
+            if (getComputedStyle(cellule).background !== 'none') {
+                setInterval(() => {
+                    let randomPath = path[Math.floor(Math.random() * path.length)]
+                    switch (randomPath) {
+                        case "haut": j--; break;
+                        case "droite": j += 10; break;
+                        case "bas": j++; break;
+                        case "gauche": j -= 10; break;
+                    }
+                    cellules[j].style.backgroundColor = getComputedStyle(cellule).backgroundColor
+                }, 1000)
+            }
+        }); */
+        let i = 0
+        cellules.forEach((cellule, key) => {
+            if (cellule.firstChild) {
+                i++
+            }
+        })
     }
 
     const reset = () => {
-        const cellules = document.querySelectorAll('.cellule')
-
-        cellules.forEach(cellule => {
-            cellule.style.backgroundColor = ''
-        });
+        const lesGouttes = document.querySelectorAll('.cellule.dragging.item')
+        lesGouttes.forEach(cel => {
+            cel.classList.remove('item')
+            cel.style.backgroundColor = ''
+        })
     }
-
-    const auto = () => {
-
-    }
-
-    useEffect(() => {
-        const gameHeight = 4;
-        const gameWidth = 3;
-        const container = document.getElementById("grid-container");
-
-        for (let i = 0; i < gameWidth * gameHeight; i++) {
-            container.innerHTML += `<div class="grid-square"></div>`;
-        }
-
-        const gridSquares = document.querySelectorAll(".grid-square");
-
-        gridSquares[0].classList.add("contains-player");
-    }, [])
 
     return (
         <>
             <div className="split left">
-                <Boite title="Selector" content={
-                    <>
-                        <select name="goutte" ref={couleurGoutte} defaultChecked="blue">
-                            <option value="blue">Bleu</option>
-                            <option value="yellow">Jaune</option>
-                        </select>
-                        <button onClick={ajouterGoutte}>Ajouter</button>
-                    </>
-                }
-                />
+                <div className="d-flex items-selection">
+                    <Goutte setSelectedColor={setSelectedColor} color="blue" />
+                    <Goutte setSelectedColor={setSelectedColor} color="yellow" />
+                    <Goutte setSelectedColor={setSelectedColor} color="red" />
+                    <Goutte setSelectedColor={setSelectedColor} color="green" />
+                </div>
 
-                <br />
-                <br />
+                <div className="mt-3"></div>
 
-                <Boite title="Bouger de case en case (individuellement)" content={
-                    <>
-                        <label htmlFor="x">X</label>
-                        <input type="number" name="x" min="1" defaultValue="1" ref={x} />
+                <label htmlFor="x">X</label>
+                <input type="number" name="x" min="1" defaultValue="1" ref={x} />
 
-                        <label htmlFor="y">Y</label>
-                        <input type="number" name="y" min="1" defaultValue="1" ref={y} />
+                <label htmlFor="y">Y</label>
+                <input type="number" name="y" min="1" defaultValue="1" ref={y} />
 
-                        <button onClick={decaler}>Décaler</button>
-                    </>
-                }
-                />
+                <button className="btn btn-success" onClick={decaler}>Décaler</button>
 
-                <br />
-                <br />
-                <button onClick={reset}>Réinitialiser</button>
-                <button onClick={auto}>Auto</button>
+                <div className="mt-3"></div>
+
+                <button className="btn btn-danger" onClick={reset}>Réinitialiser</button>
+                <button className="btn btn-primary" onClick={auto}>Lancer</button>
             </div>
 
             <div className="split right">
                 <div className="tapis">
-                    <div id="grid-container"></div>
+                    {[...Array(10)].map((x, i) =>
+                        <Cellule key={i} actualColor={selectedColor} />
+                    )}
                 </div>
             </div>
         </>
