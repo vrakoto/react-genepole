@@ -6,6 +6,9 @@ function App() {
     const x = useRef(0)
     const y = useRef(0)
     const [selectedColor, setSelectedColor] = useState('')
+    const [openModal, setOpenModal] = useState(false)
+    const [enableMovingXY, setEnableMovingXY] = useState(false)
+    const [selectedGoutte, setSelectedGoutte] = useState('')
 
     // on s'en branle de ca on verra plus tard
     const ajouterGoutte = () => {
@@ -23,19 +26,30 @@ function App() {
         cellules[randomSpawn].style.backgroundColor = couleurGoutte.current.value */
     }
 
-    // Pareil on s'en branle
-    const decaler = () => {
-        const colonnes = document.querySelectorAll('.colonne')
-        const lesGouttesEtablis = document.querySelectorAll('.cellule .item')[0]
+    const fermerModal = () => {
+        setOpenModal(false)
+        setEnableMovingXY(false)
+    }
 
-        /* const positionX = (x.current.value - 1)
+    // Pareil on s'en branle
+    const bouger = () => {
+        const colonnes = document.querySelectorAll('.colonne')
+        const positionX = (x.current.value - 1)
         const positionY = (y.current.value - 1)
 
-        try {
-            colonnes[positionX].children[positionY].style.backgroundColor = couleurGoutte.current.value
-        } catch (error) {
-            alert("Cette cardinalité n'existe pas")
-        } */
+        if (selectedGoutte.color !== '') {
+            try {
+                colonnes[selectedGoutte.idColonne - 1].children[selectedGoutte.idCellule - 1].classList.remove('item')
+                colonnes[selectedGoutte.idColonne - 1].children[selectedGoutte.idCellule - 1].style.backgroundColor = ''
+
+                colonnes[positionX].children[positionY].classList.add('item')
+                colonnes[positionX].children[positionY].style.backgroundColor = selectedGoutte.color
+            } catch (error) {
+                alert("Cette cardinalité n'existe pas")
+            }
+        } else {
+            alert('Sélectionnez une goutte présente dans une cellule !')
+        }
     }
 
     // Pareil osef pour le moment
@@ -75,36 +89,54 @@ function App() {
         })
     }
 
+    useEffect(() => {
+        if (openModal === true) {
+            setSelectedColor('')
+            setEnableMovingXY(true)
+        }
+    }, [openModal])
+
     return (
         <>
             <div className="split left">
-                <div className="d-flex items-selection">
-                    <Goutte setSelectedColor={setSelectedColor} color="blue" />
-                    <Goutte setSelectedColor={setSelectedColor} color="yellow" />
-                    <Goutte setSelectedColor={setSelectedColor} color="red" />
-                    <Goutte setSelectedColor={setSelectedColor} color="green" />
-                </div>
+                {!enableMovingXY ? (
+                    <div className="d-flex items-selection">
+                        <Goutte setSelectedColor={setSelectedColor} color="blue" />
+                        <Goutte setSelectedColor={setSelectedColor} color="yellow" />
+                        <Goutte setSelectedColor={setSelectedColor} color="red" />
+                        <Goutte setSelectedColor={setSelectedColor} color="green" />
+                    </div>
+                ) : ''}
 
                 <div className="mt-3"></div>
 
-                <label htmlFor="x">X</label>
-                <input type="number" name="x" min="1" defaultValue="1" ref={x} />
+                {!openModal ? (
+                    <button className="btn btn-primary" onClick={() => setOpenModal(true)}>Faire bouger une goutte</button>
+                ) : (
+                    <>
+                        <label htmlFor="x">X</label>
+                        <input className="ms-2" type="number" name="x" min="1" defaultValue="1" ref={x} />
+                        <br />
+                        <label htmlFor="y">Y</label>
+                        <input className="ms-2" type="number" name="y" min="1" defaultValue="1" ref={y} />
 
-                <label htmlFor="y">Y</label>
-                <input type="number" name="y" min="1" defaultValue="1" ref={y} />
+                        <div className="mt-3"></div>
+                        <button className="btn btn-secondary" onClick={fermerModal}>Fermer</button>
+                        <button className="btn btn-success ms-2" onClick={bouger}>Bouger</button>
+                    </>
+                )}
 
-                <button className="btn btn-success" onClick={decaler}>Décaler</button>
 
-                <div className="mt-3"></div>
+                <hr className="mt-3" />
 
                 <button className="btn btn-danger" onClick={reset}>Réinitialiser</button>
-                <button className="btn btn-primary" onClick={auto}>Lancer</button>
+                <button className="btn btn-primary ms-2" onClick={auto}>Lancer</button>
             </div>
 
             <div className="split right">
                 <div className="tapis">
                     {[...Array(10)].map((x, i) =>
-                        <Cellule key={i} actualColor={selectedColor} />
+                        <Cellule colonneId={i} key={i} actualColor={selectedColor} enableMovingXY={enableMovingXY} setSelectedGoutte={setSelectedGoutte} />
                     )}
                 </div>
             </div>
