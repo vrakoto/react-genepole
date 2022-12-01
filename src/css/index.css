@@ -14,20 +14,9 @@
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: #363636;
     color: var(--high);
+    background-color: #363636;
 }
-
-.boite {
-    display: inline-block;
-    height: 80px;
-    border-radius: 10px;
-    background-color: #000;
-}
-
 
 .tapis {
     display: flex;
@@ -63,8 +52,7 @@ body {
   
 .left {
     left: 0;
-    background-color: #363636;
-    margin-left: 20px;
+    padding-left: 20px;
 }
   
 .right {
@@ -81,10 +69,22 @@ body {
     margin-right: 10px;
 }
 
-.item {
+.item, .fusion {
     height: 50px;
     width: 50px;
+}
+.item {
     border-radius: 50%;
+    transition: all 0.2s ease-in;
+}
+
+.fusion {
+    border-radius: unset;
+}
+
+.mixeur {
+    background-color: salmon;
+    transition: all 0.4s ease-in-out;
 }
 
 .hide {

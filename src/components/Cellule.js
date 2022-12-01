@@ -1,30 +1,17 @@
-function Cellule({colonneId, actualColor, enableMovingXY, setSelectedGoutte}) {
+function Cellule({colonneId, actualColor, enableMovingXY, setSelectedGoutte, setUpdateCellule}) {
     const rows = [];
 
     const ajouterGoutte = (e) => {
         if (actualColor) {
-            const colonnes = document.querySelectorAll('.colonne')
-
             // si la cellule cliquée contient une goutte de couleur alors on la retire
             if (e.target.style.backgroundColor === actualColor) {
                 e.target.classList.remove('item')
                 e.target.style.backgroundColor = ''
             } else { // sinon on établi la goutte dans la cellule sélectionné
-                
-                /* const idColonne = parseInt(e.target.parentNode.id.replace(/\D/g, ""))
-                const idCellule = parseInt(e.currentTarget.id.replace(/\D/g, ""))
-
-                if (colonnes[idColonne-1+1].children[idCellule-1].classList.contains('item')) {
-                    const colision = colonnes[idColonne-1+1].children[idCellule-1]
-                    const actuel = e.target
-
-                    actuel.style.backgroundColor = 'red'
-                    colision.style.backgroundColor = 'red'
-                } */
-
                 e.target.classList.add('item')
                 e.target.classList.remove('drag-over')
                 e.target.style.backgroundColor = actualColor
+                setUpdateCellule(prev => prev + 1)
             }
         }
     }
